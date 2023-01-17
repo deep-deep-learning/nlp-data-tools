@@ -1,4 +1,4 @@
 *.csv
 venv/*
 *.jsonl
-num_sentences.ipynb
+*.ipynb
