@@ -1,3 +1,4 @@
-
 *.csv
-*.ipynb
+venv/*
+*.jsonl
+num_sentences.ipynb
