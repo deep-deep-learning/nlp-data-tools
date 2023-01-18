@@ -40,16 +40,16 @@ class Dataset:
         print('Formatting completions')
         # prepare completion
         if completion_prefix != None:
-            self.check_and_add_fix(self.df, 'completion', completion_prefix, 'prefix')
+            self.check_and_add_fix('completion', completion_prefix, 'prefix')
         if completion_suffix != None:
-            self.check_and_add_fix(self.df, 'completion', completion_suffix, 'suffix')
+            self.check_and_add_fix('completion', completion_suffix, 'suffix')
 
         print('Formatting prompts')
         # prepare prompt
         if prompt_prefix != None:
-            self.check_and_add_fix(self.df, 'prompt', prompt_prefix, 'prefix')
+            self.check_and_add_fix('prompt', prompt_prefix, 'prefix')
         if prompt_suffix != None:
-            self.check_and_add_fix(self.df, 'prompt', prompt_suffix, 'suffix')
+            self.check_and_add_fix('prompt', prompt_suffix, 'suffix')
 
         output_path = self.file_path[:-4] + '-formatted.csv'
         print('Saving formatted dataset', output_path)
