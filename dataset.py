@@ -1,3 +1,5 @@
+from typing import List
+
 import pandas as pd
 from transformers import GPT2TokenizerFast
 
@@ -6,15 +8,35 @@ class Dataset:
     def __init__(
         self,
         file_path:str,
+        tokenizer:str='gpt2'
     ):
         self.file_path = file_path
         self.df = pd.read_csv(file_path)
         self.origin_df = self.df.copy()
+        self.tokenizer = GPT2TokenizerFast.from_pretrained(tokenizer)
+
+    def generate_prompt(
+        self,
+        columns:List[str],
+        max_tokens:List[int],
+        seperator:str='\n',
+    ):
+        def combine_columns(row):
+            seperator.join(
+                [
+                    self.get_first_n_tokens(row[column], max_token) \
+                        for column, max_token in zip(columns, max_tokens)
+                ]
+            )
+
+
+        self.df['prompt'] = self.df.apply(lambda row: combine_columns(row), axis=1)
+        
 
     def prepare_dataset_openai(
         self,
     ):
-        self.tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
+        
         self.prepare_dataset(
             completion_prefix=' ',
             completion_suffix=' END',
@@ -33,9 +55,6 @@ class Dataset:
         # check if required columns are there
         assert 'completion' in self.df.columns, "We need a column named 'completion'"
         assert 'prompt' in self.df.columns, "We need a column named 'prompt'"
-
-        # get first 1800 tokens of prompts
-        self.df['prompt'] = self.df['prompt'].apply(lambda c: self.get_first_n_tokens(c, prompt_tokens))
 
         print('Formatting completions')
         # prepare completion
@@ -60,7 +79,9 @@ class Dataset:
         text:str,
         n:int,
     ) -> str:
-        
+
+        if n == -1:
+            return text
         return self.tokenizer.decode(self.tokenizer.encode(text)[:n])
         
     def check_and_add_fix(
