@@ -45,7 +45,6 @@ class Dataset:
     
     def prepare_dataset(
         self,
-        prompt_tokens:int=1800,
         completion_prefix:str=None,
         completion_suffix:str=None,
         prompt_prefix:str=None,
@@ -70,7 +69,7 @@ class Dataset:
         if prompt_suffix != None:
             self.check_and_add_fix('prompt', prompt_suffix, 'suffix')
 
-        output_path = self.file_path[:-4] + '-formatted.csv'
+        output_path = self.file_path[:-4] + '_formatted.csv'
         print('Saving formatted dataset', output_path)
         self.df[['prompt', 'completion']].to_csv(output_path, index=False)
 
